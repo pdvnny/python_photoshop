@@ -1,0 +1,25 @@
+Structure: Node, Neighbor, Weight/Capacity
+Source: Lecture 17 - EC 504 - Edmonds-Karp Example
+Max-Flow Result: 12
+Min-Cut: A = (1, 3, 4) and B = (2, 5, 6, 7, 8, 9)
+9 nodes
+14 edges
+
+(Source, Destination)
+1 8
+
+1 2 8
+1 3 12
+2 5 5
+2 7 7
+2 4 6
+3 4 5
+3 6 2
+4 6 2
+5 9 9
+5 6 6
+6 7 5
+6 8 8
+7 8 6
+9 8 4
+9 7 3
