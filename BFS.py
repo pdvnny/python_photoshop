@@ -83,7 +83,7 @@ def bfs(G, s, t):
 			break
 
 	# PRINT BFS TREE(S)
-	bfs_print(predecessors, depth)
+	# bfs_print(predecessors, depth)
 
 	# GENERATE S-T Path
 	st_path.append(t)
@@ -107,10 +107,4 @@ def bfs(G, s, t):
 	Using this approach, I will have to reverse the elements of "st_path" before returning them
 
 """
-
-
-# *************** USING BFS **********************
-
-# qSize = 10000  # can be adjusted, picked a random number that seemed large enough for now - NVM, DON'T NEED THIS
-
 
