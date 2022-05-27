@@ -17,6 +17,7 @@
 
 from BFS import bfs
 from queue import Queue
+from copy import deepcopy
 
 """ **************** FUNCTION OUTLINES ***********************
 
@@ -28,11 +29,11 @@ OUTPUTS: (1) max-flow, (2) source side of min-cut, (3) sink side of min-cut
 
 
 def gen_residual_graph(g, g_f):
-    g_r = g
-    for node in range(len(g_r)): # address each node one at a time
+    g_r = deepcopy(g)
+    for node in range(1,len(g_r)+1):  # address each node one at a time
 
         # update existing edges ... change capacities and remove any edges if necessary
-        for j in range(len(g_r[node-1][0])):
+        for j in range(len(g_f[node-1][0])):
             remaining_cap = g_r[node-1][1][j] - g_f[node-1][1][j]
 
             # update capacity in g_r
@@ -56,11 +57,11 @@ def gen_residual_graph(g, g_f):
 
 def edmonds_karp(g, s, t):
     # Initialize residual graph (g_r) as original graph
-    g_r = g
+    g_r = deepcopy(g)
 
     # Create flow graph, f
-    f = g
-    for node in f: # these loops are meant to set the flow on each edge to 0
+    f = deepcopy(g)
+    for node in f:  # these loops are meant to set the flow on each edge to 0
         for i in range(len(node[1])):
             node[1][i] = 0
 
@@ -90,7 +91,7 @@ def edmonds_karp(g, s, t):
                     break
         # "cap" should be equal to the capacity of the s-t path at the end
 
-        for i in range(len(st_path-1)):
+        for i in range(len(st_path)-1):
             src_node = st_path[i]
             dst_node = st_path[i+1]
 
