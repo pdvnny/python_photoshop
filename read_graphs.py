@@ -54,6 +54,6 @@ def read_graph_txt_to_arc(graph_file):
     # for node in graph:
     #     print(node)
 
-    #print(graph)
+    # print(graph)
 
     return graph, s, t

@@ -77,6 +77,7 @@ def bfs(G, s, t):
 		for i in range(1, len(visited)):
 			if not visited[i]:
 				myQ.put(i)  # "i" should match a node number that was not visited
+				visited[i] = True
 				unvisited = True
 				break
 		if not unvisited:
@@ -91,6 +92,7 @@ def bfs(G, s, t):
 	while pred != -1:
 		st_path.append(pred)
 		pred = predecessors[pred]
+	# st_path.append(pred)
 	st_path.reverse()
 
 	return predecessors, depth, st_path

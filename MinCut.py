@@ -28,18 +28,28 @@ OUTPUTS: (1) max-flow, (2) source side of min-cut, (3) sink side of min-cut
 ********************************************************** """
 
 
+def remove_edges(g_r, node):
+    for j in range(len(g_r[node-1][0])):  # removing edges with no capacity now
+        if g_r[node-1][1][j] == 0:
+            g_r[node-1][0].pop(j)
+            g_r[node-1][1].pop(j)
+            return g_r, True
+    return g_r, False
+
+
 def gen_residual_graph(g, g_f):
     g_r = deepcopy(g)
-    for node in range(1,len(g_r)+1):  # address each node one at a time
+    for node in range(1, len(g_r)+1):  # address each node one at a time
 
         # update existing edges ... change capacities and remove any edges if necessary
         for j in range(len(g_f[node-1][0])):
             remaining_cap = g_r[node-1][1][j] - g_f[node-1][1][j]
 
             # update capacity in g_r
-            if remaining_cap == 0:    # remove edge in residual graph
-                g_r[node-1][0].pop(j)
-                g_r[node-1][1].pop(j)
+            if remaining_cap == 0:    # marking arcs with no more capacity for removal
+                # g_r[node-1][0].pop(j)
+                # g_r[node-1][1].pop(j) # removal will be done later
+                g_r[node-1][1][j] = 0
             else:                      # decrease capacity
                 g_r[node-1][1][j] = remaining_cap
 
@@ -50,6 +60,11 @@ def gen_residual_graph(g, g_f):
                 src = g_f[node-1][0][j]
                 g_r[src-1][0].append(dst)
                 g_r[src-1][1].append(flow)
+
+        g_r, remove_op = remove_edges(g_r, node)
+        while remove_op:
+            g_r, remove_op = remove_edges(g_r, node)
+
     # END OF FOR LOOP THROUGH ALL NODES
 
     return g_r
@@ -73,7 +88,7 @@ def edmonds_karp(g, s, t):
 
     # Starting while loop to repeatedly look for s-->t paths
     while (s in st_path) and (t in st_path):
-        print("Current s->t path is:", st_path)
+        # print("Current s->t path is:", st_path)
 
         # (1) find capacity of st-path & updating the flow graph
         cap = 999999
@@ -126,22 +141,22 @@ def edmonds_karp(g, s, t):
     # FINALLY!!! - Generate "source_cut" and "sink_cut"
     # "sink_cut" first
     myQ = Queue(maxsize=len(g_r)+1)
-    sink_cut = []
-    found = [False for i in range(len(pred))]
-    myQ.put(t)
-    found[t] = True
+    source_cut = []
+    found = [False for i in range(len(pred))]  # pred is already length 10
+    myQ.put(s)
+    found[s] = True
     while not myQ.empty():
         current = myQ.get(block=False)
-        sink_cut.append(current)
+        source_cut.append(current)
         for i, v in enumerate(pred):
             if (v == current) and (not found[i]):
-                myQ.put(v)
+                myQ.put(i)
                 found[i] = True
     # at the end, "sink_cut" should have all nodes from one half of the min-cut graph
 
-    source_cut = []
-    for n in range(1, len(g)+1):
-        if not (n in sink_cut):
-            source_cut.append(n)
+    sink_cut = []
+    for n in range(1, len(pred)):
+        if not (n in source_cut):
+            sink_cut.append(n)
 
     return max_flow, source_cut, sink_cut
